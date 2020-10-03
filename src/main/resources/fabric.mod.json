@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "mineclass",
+  "version": "${version}",
+
+  "name": "MineClass",
+  "description": "A wonderfull minecraft classes mod !",
+  "authors": [
+    "Barazok"
+  ],
+  "contact": {
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/mineclass/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "mineclass.mineclass.MineclassMod"
+    ]
+  },
+  "mixins": [
+    "mineclass.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
