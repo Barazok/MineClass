@@ -4,7 +4,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -22,7 +21,8 @@ public class DwarfStatusEffect extends StatusEffect {
             Items.DIAMOND_HOE,
             Items.GOLDEN_HOE,
             Items.IRON_HOE,
-            Items.NETHERITE_HOE
+            Items.NETHERITE_HOE,
+            Items.BOW
     );
 
     public DwarfStatusEffect() {
@@ -47,13 +47,11 @@ public class DwarfStatusEffect extends StatusEffect {
     }
 
     private void dropAndRemoveItem(PlayerEntity playerEntity, Item item) {
-        PlayerInventory playerInventory = playerEntity.inventory;
+        Player player = new Player(playerEntity);
         ItemStack stack = item.getDefaultStack();
 
-        if (playerInventory != null && playerInventory.contains(stack)) {
-            int slot = playerInventory.getSlotWithStack(stack);
+        if (player.removeItemStack(stack)) {
             playerEntity.dropStack(stack);
-            playerInventory.removeStack(slot);
         }
     }
 }

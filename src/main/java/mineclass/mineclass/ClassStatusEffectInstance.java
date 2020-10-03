@@ -5,13 +5,12 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
 public class ClassStatusEffectInstance extends StatusEffectInstance {
-    public ClassStatusEffectInstance(StatusEffect statusEffect) {
-        super(statusEffect, 99999, 0, false, false);
-        setPermanent(true);
+    public ClassStatusEffectInstance(StatusEffect statusEffect, int amplifier) {
+        super(statusEffect, 99999, amplifier, false, false);
     }
 
-    public static StatusEffectInstance of(StatusEffect effect) {
-        return new ClassStatusEffectInstance(effect);
+    public static StatusEffectInstance of(StatusEffect effect, int amplifier) {
+        return new ClassStatusEffectInstance(effect, amplifier);
     }
 
     @Override

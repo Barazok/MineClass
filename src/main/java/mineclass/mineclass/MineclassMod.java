@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.entity.EntityInteraction;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
 import net.minecraft.server.PlayerManager;
@@ -29,14 +30,11 @@ public class MineclassMod implements ModInitializer {
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "dwarf"), DWARF);
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "elf"), ELF);
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
-            System.out.println("Respawn event : " + oldPlayer + " ; " + newPlayer);
             if (oldPlayer.hasStatusEffect(DWARF)) {
-                System.out.println(oldPlayer + " had dwarf effect !");
-                newPlayer.addStatusEffect(ClassStatusEffectInstance.of(DWARF));
+                applyDwarfEffects(newPlayer);
             }
             if (oldPlayer.hasStatusEffect(ELF)) {
-                System.out.println(oldPlayer + " had elf effect !");
-                newPlayer.addStatusEffect(ClassStatusEffectInstance.of(ELF));
+                applyElfEffects(newPlayer);
             }
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
@@ -47,8 +45,8 @@ public class MineclassMod implements ModInitializer {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 AppliedStatus.getInstance().setDwarf(entity, true);
                                 AppliedStatus.getInstance().setElf(entity, false);
-                                entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF));
-                                entity.removeStatusEffect(ELF);
+                                applyDwarfEffects(entity);
+                                removeElfEffects(entity);
                                 return 1;
                             })
                     )
@@ -59,8 +57,8 @@ public class MineclassMod implements ModInitializer {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 AppliedStatus.getInstance().setElf(entity, true);
                                 AppliedStatus.getInstance().setDwarf(entity, false);
-                                entity.addStatusEffect(ClassStatusEffectInstance.of(ELF));
-                                entity.removeStatusEffect(DWARF);
+                                applyElfEffects(entity);
+                                removeDwarfEffects(entity);
                                 return 1;
                             })
                     )
@@ -71,12 +69,46 @@ public class MineclassMod implements ModInitializer {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 AppliedStatus.getInstance().setDwarf(entity, false);
                                 AppliedStatus.getInstance().setElf(entity, false);
-                                entity.removeStatusEffect(DWARF);
-                                entity.removeStatusEffect(ELF);
+                                removeDwarfEffects(entity);
+                                removeElfEffects(entity);
                                 return 1;
                             })
                     )
             );
         });
+    }
+
+    private void removeElfEffects(ServerPlayerEntity entity) {
+        entity.removeStatusEffect(ELF);
+        entity.removeStatusEffect(StatusEffects.SPEED);
+        entity.removeStatusEffect(StatusEffects.JUMP_BOOST);
+        entity.removeStatusEffect(StatusEffects.STRENGTH);
+        entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
+        entity.removeStatusEffect(StatusEffects.LUCK);
+    }
+
+    private void removeDwarfEffects(ServerPlayerEntity entity) {
+        entity.removeStatusEffect(DWARF);
+        entity.removeStatusEffect(StatusEffects.HEALTH_BOOST);
+        entity.removeStatusEffect(StatusEffects.HERO_OF_THE_VILLAGE);
+        entity.removeStatusEffect(StatusEffects.HASTE);
+        entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
+    }
+
+    private void applyDwarfEffects(ServerPlayerEntity entity) {
+        entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HEALTH_BOOST, 2));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HERO_OF_THE_VILLAGE, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HASTE, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.NIGHT_VISION, 0));
+    }
+
+    private void applyElfEffects(ServerPlayerEntity entity) {
+        entity.addStatusEffect(ClassStatusEffectInstance.of(ELF, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.SPEED, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.JUMP_BOOST, 1));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.STRENGTH, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.NIGHT_VISION, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.LUCK, 0));
     }
 }
