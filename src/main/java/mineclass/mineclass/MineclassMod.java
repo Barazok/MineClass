@@ -2,11 +2,22 @@ package mineclass.mineclass;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.minecraft.entity.EntityInteraction;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.player.PlayerAbilities;
+import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.ServerMetadata;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import java.util.Map;
 
 public class MineclassMod implements ModInitializer {
 
@@ -17,18 +28,15 @@ public class MineclassMod implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "dwarf"), DWARF);
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "elf"), ELF);
-        ClientTickEvents.END_CLIENT_TICK.register(minecraftClient -> {
-            if (minecraftClient.player != null) {
-                if (AppliedStatus.getInstance().isDwarf() && !minecraftClient.player.hasStatusEffect(DWARF)) {
-                    minecraftClient.player.addStatusEffect(ClassStatusEffectInstance.of(DWARF));
-                } else if (!AppliedStatus.getInstance().isDwarf()) {
-                    minecraftClient.player.removeStatusEffect(DWARF);
-                }
-                if (AppliedStatus.getInstance().isElf() && !minecraftClient.player.hasStatusEffect(ELF)) {
-                    minecraftClient.player.addStatusEffect(ClassStatusEffectInstance.of(ELF));
-                } else if (!AppliedStatus.getInstance().isElf()) {
-                    minecraftClient.player.removeStatusEffect(ELF);
-                }
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            System.out.println("Respawn event : " + oldPlayer + " ; " + newPlayer);
+            if (oldPlayer.hasStatusEffect(DWARF)) {
+                System.out.println(oldPlayer + " had dwarf effect !");
+                newPlayer.addStatusEffect(ClassStatusEffectInstance.of(DWARF));
+            }
+            if (oldPlayer.hasStatusEffect(ELF)) {
+                System.out.println(oldPlayer + " had elf effect !");
+                newPlayer.addStatusEffect(ClassStatusEffectInstance.of(ELF));
             }
         });
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
@@ -36,8 +44,11 @@ public class MineclassMod implements ModInitializer {
             dispatcher.register(CommandManager.literal("class")
                     .then(CommandManager.literal("dwarf")
                             .executes(context -> {
-                                AppliedStatus.getInstance().setElf(false);
-                                AppliedStatus.getInstance().setDwarf(true);
+                                ServerPlayerEntity entity = context.getSource().getPlayer();
+                                AppliedStatus.getInstance().setDwarf(entity, true);
+                                AppliedStatus.getInstance().setElf(entity, false);
+                                entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF));
+                                entity.removeStatusEffect(ELF);
                                 return 1;
                             })
                     )
@@ -45,8 +56,11 @@ public class MineclassMod implements ModInitializer {
             dispatcher.register(CommandManager.literal("class")
                     .then(CommandManager.literal("elf")
                             .executes(context -> {
-                                AppliedStatus.getInstance().setDwarf(false);
-                                AppliedStatus.getInstance().setElf(true);
+                                ServerPlayerEntity entity = context.getSource().getPlayer();
+                                AppliedStatus.getInstance().setElf(entity, true);
+                                AppliedStatus.getInstance().setDwarf(entity, false);
+                                entity.addStatusEffect(ClassStatusEffectInstance.of(ELF));
+                                entity.removeStatusEffect(DWARF);
                                 return 1;
                             })
                     )
@@ -54,8 +68,11 @@ public class MineclassMod implements ModInitializer {
             dispatcher.register(CommandManager.literal("class")
                     .then(CommandManager.literal("clear")
                             .executes(context -> {
-                                AppliedStatus.getInstance().setDwarf(false);
-                                AppliedStatus.getInstance().setElf(false);
+                                ServerPlayerEntity entity = context.getSource().getPlayer();
+                                AppliedStatus.getInstance().setDwarf(entity, false);
+                                AppliedStatus.getInstance().setElf(entity, false);
+                                entity.removeStatusEffect(DWARF);
+                                entity.removeStatusEffect(ELF);
                                 return 1;
                             })
                     )

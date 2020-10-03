@@ -4,6 +4,7 @@
   "package": "mineclass.mineclass.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PlayerManagerMixin"
   ],
   "client": [
   ],

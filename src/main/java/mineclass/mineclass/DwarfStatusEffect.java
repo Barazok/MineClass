@@ -4,7 +4,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 import java.util.Arrays;
@@ -45,9 +47,13 @@ public class DwarfStatusEffect extends StatusEffect {
     }
 
     private void dropAndRemoveItem(PlayerEntity playerEntity, Item item) {
-        if (playerEntity.inventory.contains(item.getDefaultStack())) {
-            playerEntity.dropStack(item.getDefaultStack());
-            playerEntity.inventory.removeStack(playerEntity.inventory.getSlotWithStack(item.getDefaultStack()));
+        PlayerInventory playerInventory = playerEntity.inventory;
+        ItemStack stack = item.getDefaultStack();
+
+        if (playerInventory != null && playerInventory.contains(stack)) {
+            int slot = playerInventory.getSlotWithStack(stack);
+            playerEntity.dropStack(stack);
+            playerInventory.removeStack(slot);
         }
     }
 }
