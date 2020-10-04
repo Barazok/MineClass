@@ -28,8 +28,8 @@ public class MineclassMod implements ModInitializer {
     public void onInitialize() {
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "dwarf"), DWARF);
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "elf"), ELF);
-        Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "firedwarf"), ELF);
-        Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "naga"), ELF);
+        Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "firedwarf"), FIRE_DWARF);
+        Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "naga"), NAGA);
 
         PlayerPickupItemCallback.EVENT.register((player, pickupEntity) -> {
             ItemStack itemStack = pickupEntity.getStack();
