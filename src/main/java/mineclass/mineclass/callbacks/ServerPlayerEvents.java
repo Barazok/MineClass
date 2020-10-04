@@ -1,9 +1,8 @@
-package mineclass.mineclass;
-
-import net.minecraft.server.network.ServerPlayerEntity;
+package mineclass.mineclass.callbacks;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public final class ServerPlayerEvents {
     /**
@@ -39,6 +38,9 @@ public final class ServerPlayerEvents {
         }
     });
 
+    private ServerPlayerEvents() {
+    }
+
     @FunctionalInterface
     public interface CopyFrom {
         /**
@@ -46,7 +48,7 @@ public final class ServerPlayerEvents {
          *
          * @param oldPlayer the old player
          * @param newPlayer the new player
-         * @param alive whether the old player is still alive
+         * @param alive     whether the old player is still alive
          */
         void copyFromPlayer(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean alive);
     }
@@ -58,7 +60,7 @@ public final class ServerPlayerEvents {
          *
          * @param oldPlayer the old player
          * @param newPlayer the new player
-         * @param alive whether the old player is still alive
+         * @param alive     whether the old player is still alive
          */
         void afterRespawn(ServerPlayerEntity oldPlayer, ServerPlayerEntity newPlayer, boolean alive);
     }
@@ -66,8 +68,5 @@ public final class ServerPlayerEvents {
     @FunctionalInterface
     public interface FirstJoin {
         void firstJoined(ServerPlayerEntity player);
-    }
-
-    private ServerPlayerEvents() {
     }
 }

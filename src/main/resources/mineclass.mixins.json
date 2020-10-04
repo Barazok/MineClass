@@ -4,6 +4,8 @@
   "package": "mineclass.mineclass.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "MixinItemEntity",
+    "MixinPlayerInventory",
     "PlayerManagerMixin"
   ],
   "client": [

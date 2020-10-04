@@ -1,14 +1,7 @@
 package mineclass.mineclass.mixin;
 
 import com.mojang.authlib.GameProfile;
-import mineclass.mineclass.ServerPlayerEvents;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
+import mineclass.mineclass.callbacks.ServerPlayerEvents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.PlayerManager;
@@ -16,7 +9,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.UserCache;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PlayerManager.class)
 public abstract class PlayerManagerMixin {

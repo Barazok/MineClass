@@ -1,4 +1,4 @@
-package mineclass.mineclass;
+package mineclass.mineclass.utils;
 
 import net.minecraft.server.network.ServerPlayerEntity;
 
