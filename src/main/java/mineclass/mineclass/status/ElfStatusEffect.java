@@ -32,10 +32,10 @@ public class ElfStatusEffect extends MineclassStatusEffectImpl implements Minecl
     }};
 
     public Map<StatusEffect, Integer> classStatusEffects = Stream.of(new Object[][]{
-            {StatusEffects.SPEED, 1},
-            {StatusEffects.JUMP_BOOST, 0},
-            {StatusEffects.STRENGTH, 0},
-            {StatusEffects.LUCK, 1},
+            {StatusEffects.SPEED, 2},
+            {StatusEffects.JUMP_BOOST, 1},
+            {StatusEffects.STRENGTH, 1},
+            {StatusEffects.LUCK, 2},
             {StatusEffects.NIGHT_VISION, 1},
     }).collect(Collectors.toMap(data -> (StatusEffect) data[0], data -> (Integer) data[1]));
 

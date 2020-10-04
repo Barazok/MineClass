@@ -28,11 +28,11 @@ public class DwarfStatusEffect extends MineclassStatusEffectImpl {
     }};
 
     private final Map<StatusEffect, Integer> classStatusEffects = Stream.of(new Object[][]{
-            {StatusEffects.HEALTH_BOOST, 1},
-            {StatusEffects.RESISTANCE, 0},
-            {StatusEffects.HERO_OF_THE_VILLAGE, 0},
-            {StatusEffects.HASTE, 1},
-            {StatusEffects.NIGHT_VISION, 0},
+            {StatusEffects.HEALTH_BOOST, 2},
+            {StatusEffects.RESISTANCE, 1},
+            {StatusEffects.HERO_OF_THE_VILLAGE, 1},
+            {StatusEffects.HASTE, 2},
+            {StatusEffects.NIGHT_VISION, 1},
     }).collect(Collectors.toMap(data -> (StatusEffect) data[0], data -> (Integer) data[1]));
 
     private final Map<Item, List<Pair<Enchantment, Integer>>> classEnchantments = Stream.of(

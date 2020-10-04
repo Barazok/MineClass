@@ -32,7 +32,7 @@ public abstract class MineclassStatusEffectImpl extends StatusEffect implements 
     }
 
     public void applyEffects(ServerPlayerEntity entity) {
-        getClassStatusEffects().forEach((statusEffect, integer) -> entity.addStatusEffect(ClassStatusEffectInstance.of(statusEffect, integer)));
+        getClassStatusEffects().forEach((statusEffect, integer) -> entity.addStatusEffect(ClassStatusEffectInstance.of(statusEffect, integer - 1)));
     }
 
     public void applyEnchantments(PlayerEntity playerEntity) {
