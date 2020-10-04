@@ -84,12 +84,8 @@ public class MineclassMod implements ModInitializer {
                     .then(CommandManager.literal("clear")
                             .executes(context -> {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
-                                AppliedStatus.getInstance().setDwarf(entity, false);
-                                AppliedStatus.getInstance().setElf(entity, false);
-                                entity.removeStatusEffect(DWARF);
-                                DWARF.removeEffects(entity);
-                                entity.removeStatusEffect(ELF);
-                                ELF.removeEffects(entity);
+                                removeDwarfStatus(entity);
+                                removeElfStatus(entity);
                                 return 1;
                             })
                     )
@@ -99,14 +95,8 @@ public class MineclassMod implements ModInitializer {
                     .then(CommandManager.literal("dwarf")
                             .executes(context -> {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
-                                AppliedStatus.getInstance().setDwarf(entity, true);
-                                AppliedStatus.getInstance().setElf(entity, false);
-                                entity.removeStatusEffect(ELF);
-                                ELF.removeEffects(entity);
-                                entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
-                                DWARF.applyEffects(entity);
-                                DWARF.dropAndRemoveForbiddenItems(entity);
-                                DWARF.applyEnchantments(entity);
+                                removeElfStatus(entity);
+                                applyDwarfStatus(entity);
                                 return 1;
                             })
                     )
@@ -116,18 +106,40 @@ public class MineclassMod implements ModInitializer {
                     .then(CommandManager.literal("elf")
                             .executes(context -> {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
-                                AppliedStatus.getInstance().setDwarf(entity, false);
-                                AppliedStatus.getInstance().setElf(entity, true);
-                                entity.removeStatusEffect(DWARF);
-                                DWARF.removeEffects(entity);
-                                entity.addStatusEffect(ClassStatusEffectInstance.of(ELF, 0));
-                                ELF.applyEffects(entity);
-                                ELF.dropAndRemoveForbiddenItems(entity);
-                                ELF.applyEnchantments(entity);
+                                removeDwarfStatus(entity);
+                                applyElfStatus(entity);
                                 return 1;
                             })
                     )
             );
         });
+    }
+
+    private void applyElfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setElf(entity, true);
+        entity.addStatusEffect(ClassStatusEffectInstance.of(ELF, 0));
+        ELF.applyEffects(entity);
+        ELF.dropAndRemoveForbiddenItems(entity);
+        ELF.applyEnchantments(entity);
+    }
+
+    private void removeElfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setElf(entity, false);
+        entity.removeStatusEffect(ELF);
+        ELF.removeEffects(entity);
+    }
+
+    private void applyDwarfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setDwarf(entity, true);
+        entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
+        DWARF.applyEffects(entity);
+        DWARF.dropAndRemoveForbiddenItems(entity);
+        DWARF.applyEnchantments(entity);
+    }
+
+    private void removeDwarfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setDwarf(entity, false);
+        entity.removeStatusEffect(DWARF);
+        DWARF.removeEffects(entity);
     }
 }
