@@ -3,9 +3,7 @@ package mineclass.mineclass;
 import mineclass.mineclass.callbacks.PlayerInventorySetStackCallback;
 import mineclass.mineclass.callbacks.PlayerPickupItemCallback;
 import mineclass.mineclass.callbacks.ServerPlayerEvents;
-import mineclass.mineclass.status.DwarfStatusEffect;
-import mineclass.mineclass.status.ElfStatusEffect;
-import mineclass.mineclass.status.MineclassStatusEffectImpl;
+import mineclass.mineclass.status.*;
 import mineclass.mineclass.utils.AppliedStatus;
 import mineclass.mineclass.utils.ClassStatusEffectInstance;
 import mineclass.mineclass.utils.Player;
@@ -23,11 +21,15 @@ public class MineclassMod implements ModInitializer {
 
     public static final MineclassStatusEffectImpl DWARF = new DwarfStatusEffect();
     public static final MineclassStatusEffectImpl ELF = new ElfStatusEffect();
+    public static final MineclassStatusEffectImpl FIRE_DWARF = new FireDwarfStatusEffect();
+    public static final MineclassStatusEffectImpl NAGA = new NagaStatusEffect();
 
     @Override
     public void onInitialize() {
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "dwarf"), DWARF);
         Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "elf"), ELF);
+        Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "firedwarf"), ELF);
+        Registry.register(Registry.STATUS_EFFECT, new Identifier("mineclass", "naga"), ELF);
 
         PlayerPickupItemCallback.EVENT.register((player, pickupEntity) -> {
             ItemStack itemStack = pickupEntity.getStack();
@@ -41,17 +43,31 @@ public class MineclassMod implements ModInitializer {
                     return ActionResult.FAIL;
                 }
             }
+            if (player.hasStatusEffect(FIRE_DWARF)) {
+                if (FIRE_DWARF.getForbiddenItems().contains(itemStack.getItem())) {
+                    return ActionResult.FAIL;
+                }
+            }
+            if (player.hasStatusEffect(NAGA)) {
+                if (NAGA.getForbiddenItems().contains(itemStack.getItem())) {
+                    return ActionResult.FAIL;
+                }
+            }
             return ActionResult.PASS;
         });
 
         ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
             if (oldPlayer.hasStatusEffect(DWARF)) {
-                newPlayer.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
-                DWARF.applyEffects(newPlayer);
+                applyDwarfStatus(newPlayer);
             }
             if (oldPlayer.hasStatusEffect(ELF)) {
-                newPlayer.addStatusEffect(ClassStatusEffectInstance.of(ELF, 0));
-                ELF.applyEffects(newPlayer);
+                applyElfStatus(newPlayer);
+            }
+            if (oldPlayer.hasStatusEffect(FIRE_DWARF)) {
+                applyFireDwarfStatus(newPlayer);
+            }
+            if (oldPlayer.hasStatusEffect(NAGA)) {
+                applyNagaStatus(newPlayer);
             }
         });
 
@@ -67,6 +83,20 @@ public class MineclassMod implements ModInitializer {
                 ELF.dropAndRemoveForbiddenItems(playerEntity);
                 if (ELF.getClassEnchantments().containsKey(itemStack.getItem())) {
                     Player.applyEnchantmentOnStack(itemStack, ELF.getClassEnchantments().get(itemStack.getItem()));
+                    return ActionResult.PASS;
+                }
+            }
+            if (playerEntity.hasStatusEffect(FIRE_DWARF)) {
+                FIRE_DWARF.dropAndRemoveForbiddenItems(playerEntity);
+                if (FIRE_DWARF.getClassEnchantments().containsKey(itemStack.getItem())) {
+                    Player.applyEnchantmentOnStack(itemStack, FIRE_DWARF.getClassEnchantments().get(itemStack.getItem()));
+                    return ActionResult.PASS;
+                }
+            }
+            if (playerEntity.hasStatusEffect(NAGA)) {
+                NAGA.dropAndRemoveForbiddenItems(playerEntity);
+                if (NAGA.getClassEnchantments().containsKey(itemStack.getItem())) {
+                    Player.applyEnchantmentOnStack(itemStack, NAGA.getClassEnchantments().get(itemStack.getItem()));
                     return ActionResult.PASS;
                 }
             }
@@ -86,6 +116,8 @@ public class MineclassMod implements ModInitializer {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 removeDwarfStatus(entity);
                                 removeElfStatus(entity);
+                                removeFireDwarfStatus(entity);
+                                removeNagaStatus(entity);
                                 return 1;
                             })
                     )
@@ -96,6 +128,8 @@ public class MineclassMod implements ModInitializer {
                             .executes(context -> {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 removeElfStatus(entity);
+                                removeNagaStatus(entity);
+                                removeFireDwarfStatus(entity);
                                 applyDwarfStatus(entity);
                                 return 1;
                             })
@@ -107,7 +141,35 @@ public class MineclassMod implements ModInitializer {
                             .executes(context -> {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 removeDwarfStatus(entity);
+                                removeFireDwarfStatus(entity);
+                                removeNagaStatus(entity);
                                 applyElfStatus(entity);
+                                return 1;
+                            })
+                    )
+            );
+
+            dispatcher.register(CommandManager.literal("class")
+                    .then(CommandManager.literal("fire_dwarf")
+                            .executes(context -> {
+                                ServerPlayerEntity entity = context.getSource().getPlayer();
+                                removeDwarfStatus(entity);
+                                removeElfStatus(entity);
+                                removeNagaStatus(entity);
+                                applyFireDwarfStatus(entity);
+                                return 1;
+                            })
+                    )
+            );
+
+            dispatcher.register(CommandManager.literal("class")
+                    .then(CommandManager.literal("naga")
+                            .executes(context -> {
+                                ServerPlayerEntity entity = context.getSource().getPlayer();
+                                removeDwarfStatus(entity);
+                                removeFireDwarfStatus(entity);
+                                removeElfStatus(entity);
+                                applyNagaStatus(entity);
                                 return 1;
                             })
                     )
@@ -138,6 +200,34 @@ public class MineclassMod implements ModInitializer {
     }
 
     private void removeDwarfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setDwarf(entity, false);
+        entity.removeStatusEffect(DWARF);
+        DWARF.removeEffects(entity);
+    }
+
+    private void applyFireDwarfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setDwarf(entity, true);
+        entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
+        DWARF.applyEffects(entity);
+        DWARF.dropAndRemoveForbiddenItems(entity);
+        DWARF.applyEnchantments(entity);
+    }
+
+    private void removeFireDwarfStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setDwarf(entity, false);
+        entity.removeStatusEffect(DWARF);
+        DWARF.removeEffects(entity);
+    }
+
+    private void applyNagaStatus(ServerPlayerEntity entity) {
+        AppliedStatus.getInstance().setDwarf(entity, true);
+        entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
+        DWARF.applyEffects(entity);
+        DWARF.dropAndRemoveForbiddenItems(entity);
+        DWARF.applyEnchantments(entity);
+    }
+
+    private void removeNagaStatus(ServerPlayerEntity entity) {
         AppliedStatus.getInstance().setDwarf(entity, false);
         entity.removeStatusEffect(DWARF);
         DWARF.removeEffects(entity);
