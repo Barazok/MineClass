@@ -45,8 +45,8 @@ public class MineclassMod implements ModInitializer {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
                                 AppliedStatus.getInstance().setDwarf(entity, true);
                                 AppliedStatus.getInstance().setElf(entity, false);
-                                applyDwarfEffects(entity);
                                 removeElfEffects(entity);
+                                applyDwarfEffects(entity);
                                 return 1;
                             })
                     )
@@ -55,10 +55,10 @@ public class MineclassMod implements ModInitializer {
                     .then(CommandManager.literal("elf")
                             .executes(context -> {
                                 ServerPlayerEntity entity = context.getSource().getPlayer();
-                                AppliedStatus.getInstance().setElf(entity, true);
                                 AppliedStatus.getInstance().setDwarf(entity, false);
-                                applyElfEffects(entity);
+                                AppliedStatus.getInstance().setElf(entity, true);
                                 removeDwarfEffects(entity);
+                                applyElfEffects(entity);
                                 return 1;
                             })
                     )
@@ -83,13 +83,14 @@ public class MineclassMod implements ModInitializer {
         entity.removeStatusEffect(StatusEffects.SPEED);
         entity.removeStatusEffect(StatusEffects.JUMP_BOOST);
         entity.removeStatusEffect(StatusEffects.STRENGTH);
-        entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
         entity.removeStatusEffect(StatusEffects.LUCK);
+        entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
     }
 
     private void removeDwarfEffects(ServerPlayerEntity entity) {
         entity.removeStatusEffect(DWARF);
         entity.removeStatusEffect(StatusEffects.HEALTH_BOOST);
+        entity.removeStatusEffect(StatusEffects.RESISTANCE);
         entity.removeStatusEffect(StatusEffects.HERO_OF_THE_VILLAGE);
         entity.removeStatusEffect(StatusEffects.HASTE);
         entity.removeStatusEffect(StatusEffects.NIGHT_VISION);
@@ -97,9 +98,10 @@ public class MineclassMod implements ModInitializer {
 
     private void applyDwarfEffects(ServerPlayerEntity entity) {
         entity.addStatusEffect(ClassStatusEffectInstance.of(DWARF, 0));
-        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HEALTH_BOOST, 2));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HEALTH_BOOST, 1));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.RESISTANCE, 0));
         entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HERO_OF_THE_VILLAGE, 0));
-        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HASTE, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.HASTE, 1));
         entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.NIGHT_VISION, 0));
     }
 
@@ -108,7 +110,7 @@ public class MineclassMod implements ModInitializer {
         entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.SPEED, 0));
         entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.JUMP_BOOST, 1));
         entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.STRENGTH, 0));
-        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.NIGHT_VISION, 0));
         entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.LUCK, 0));
+        entity.addStatusEffect(ClassStatusEffectInstance.of(StatusEffects.NIGHT_VISION, 0));
     }
 }
