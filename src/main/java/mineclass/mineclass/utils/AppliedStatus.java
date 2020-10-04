@@ -12,6 +12,8 @@ public class AppliedStatus implements Serializable {
     private static final AppliedStatus INSTANCE = new AppliedStatus();
     private final HashMap<ServerPlayerEntity, Boolean> dwarf = new HashMap<>();
     private final HashMap<ServerPlayerEntity, Boolean> elf = new HashMap<>();
+    private final HashMap<ServerPlayerEntity, Boolean> fireDwarf = new HashMap<>();
+    private final HashMap<ServerPlayerEntity, Boolean> naga = new HashMap<>();
 
     /**
      * Constructeur privé
@@ -34,11 +36,27 @@ public class AppliedStatus implements Serializable {
         this.elf.put(entity, elf);
     }
 
+    public void setFireDwarf(ServerPlayerEntity entity, boolean fireDwarf) {
+        this.elf.put(entity, fireDwarf);
+    }
+
+    public void setNaga(ServerPlayerEntity entity, boolean naga) {
+        this.elf.put(entity, naga);
+    }
+
     public HashMap<ServerPlayerEntity, Boolean> getDwarf() {
         return dwarf;
     }
 
     public HashMap<ServerPlayerEntity, Boolean> getElf() {
         return elf;
+    }
+
+    public HashMap<ServerPlayerEntity, Boolean> getFireDwarf() {
+        return fireDwarf;
+    }
+
+    public HashMap<ServerPlayerEntity, Boolean> getNaga() {
+        return naga;
     }
 }
