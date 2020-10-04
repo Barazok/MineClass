@@ -1,5 +1,5 @@
 # MineClass
 
-# Description
+## Description
 
-# Installation
+## Installation
