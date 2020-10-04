@@ -29,20 +29,20 @@ public class ElfStatusEffect extends MineclassStatusEffectImpl implements Minecl
         add(Items.IRON_SHOVEL);
         add(Items.NETHERITE_SHOVEL);
         add(Items.CROSSBOW);
+        add(Items.TRIDENT);
     }};
 
     public Map<StatusEffect, Integer> classStatusEffects = Stream.of(new Object[][]{
             {StatusEffects.SPEED, 2},
-            {StatusEffects.JUMP_BOOST, 1},
-            {StatusEffects.STRENGTH, 1},
-            {StatusEffects.LUCK, 2},
+            {StatusEffects.JUMP_BOOST, 3},
+            {StatusEffects.LUCK, 1},
             {StatusEffects.NIGHT_VISION, 1},
     }).collect(Collectors.toMap(data -> (StatusEffect) data[0], data -> (Integer) data[1]));
 
     public Map<Item, List<Pair<Enchantment, Integer>>> classEnchantments = Stream.of(
             new AbstractMap.SimpleEntry<>(Items.BOW, Arrays.asList(
                     new Pair<>(Enchantments.INFINITY, 1),
-                    new Pair<>(Enchantments.POWER, 5)
+                    new Pair<>(Enchantments.POWER, 8)
             ))
     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

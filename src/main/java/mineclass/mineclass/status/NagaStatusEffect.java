@@ -20,29 +20,50 @@ public class NagaStatusEffect extends MineclassStatusEffectImpl implements Minec
         add(Items.GOLDEN_SWORD);
         add(Items.IRON_SWORD);
         add(Items.NETHERITE_SWORD);
-        add(Items.DIAMOND_PICKAXE);
-        add(Items.GOLDEN_PICKAXE);
-        add(Items.IRON_PICKAXE);
-        add(Items.NETHERITE_PICKAXE);
-        add(Items.DIAMOND_SHOVEL);
-        add(Items.GOLDEN_SHOVEL);
-        add(Items.IRON_SHOVEL);
-        add(Items.NETHERITE_SHOVEL);
+        add(Items.DIAMOND_AXE);
+        add(Items.GOLDEN_AXE);
+        add(Items.IRON_AXE);
+        add(Items.NETHERITE_AXE);
         add(Items.CROSSBOW);
+        add(Items.BOW);
+        add(Items.FLINT_AND_STEEL);
     }};
 
     public Map<StatusEffect, Integer> classStatusEffects = Stream.of(new Object[][]{
-            {StatusEffects.SPEED, 2},
-            {StatusEffects.JUMP_BOOST, 1},
-            {StatusEffects.STRENGTH, 1},
-            {StatusEffects.LUCK, 2},
-            {StatusEffects.NIGHT_VISION, 1},
+            {StatusEffects.DOLPHINS_GRACE, 1},
+            {StatusEffects.CONDUIT_POWER, 1},
+            {StatusEffects.WATER_BREATHING, 1},
+            {StatusEffects.SLOWNESS, 2},
+            {StatusEffects.WEAKNESS, 1},
     }).collect(Collectors.toMap(data -> (StatusEffect) data[0], data -> (Integer) data[1]));
 
     public Map<Item, List<Pair<Enchantment, Integer>>> classEnchantments = Stream.of(
-            new AbstractMap.SimpleEntry<>(Items.BOW, Arrays.asList(
-                    new Pair<>(Enchantments.INFINITY, 1),
-                    new Pair<>(Enchantments.POWER, 5)
+            new AbstractMap.SimpleEntry<>(Items.TRIDENT, Arrays.asList(
+                    new Pair<>(Enchantments.LOYALTY, 3),
+                    new Pair<>(Enchantments.IMPALING, 5),
+                    new Pair<>(Enchantments.CHANNELING, 1)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.NETHERITE_HOE, Collections.singletonList(
+                    new Pair<>(Enchantments.SHARPNESS, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.DIAMOND_HOE, Collections.singletonList(
+                    new Pair<>(Enchantments.SHARPNESS, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.IRON_HOE, Collections.singletonList(
+                    new Pair<>(Enchantments.SHARPNESS, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.WOODEN_HOE, Collections.singletonList(
+                    new Pair<>(Enchantments.SHARPNESS, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.GOLDEN_HOE, Collections.singletonList(
+                    new Pair<>(Enchantments.SHARPNESS, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.STONE_HOE, Collections.singletonList(
+                    new Pair<>(Enchantments.SHARPNESS, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.FISHING_ROD, Arrays.asList(
+                    new Pair<>(Enchantments.LUCK_OF_THE_SEA, 3),
+                    new Pair<>(Enchantments.LURE, 3)
             ))
     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 

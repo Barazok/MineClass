@@ -16,31 +16,71 @@ import java.util.stream.Stream;
 public class FireDwarfStatusEffect extends MineclassStatusEffectImpl {
 
     private final Set<Item> forbiddenItems = new HashSet<Item>() {{
-        add(Items.DIAMOND_AXE);
-        add(Items.GOLDEN_AXE);
-        add(Items.IRON_AXE);
-        add(Items.NETHERITE_AXE);
+        add(Items.DIAMOND_SWORD);
+        add(Items.GOLDEN_SWORD);
+        add(Items.IRON_SWORD);
+        add(Items.NETHERITE_SWORD);
         add(Items.DIAMOND_HOE);
         add(Items.GOLDEN_HOE);
         add(Items.IRON_HOE);
         add(Items.NETHERITE_HOE);
+        add(Items.DIAMOND_SHOVEL);
+        add(Items.GOLDEN_SHOVEL);
+        add(Items.IRON_SHOVEL);
+        add(Items.NETHERITE_SHOVEL);
         add(Items.BOW);
+        add(Items.ARROW);
+        add(Items.TRIDENT);
     }};
 
     private final Map<StatusEffect, Integer> classStatusEffects = Stream.of(new Object[][]{
-            {StatusEffects.HEALTH_BOOST, 2},
-            {StatusEffects.RESISTANCE, 1},
-            {StatusEffects.HERO_OF_THE_VILLAGE, 1},
-            {StatusEffects.HASTE, 2},
+            {StatusEffects.FIRE_RESISTANCE, 1},
+            {StatusEffects.HASTE, 1},
+            {StatusEffects.JUMP_BOOST, 2},
             {StatusEffects.NIGHT_VISION, 1},
+            {StatusEffects.HEALTH_BOOST, 2},
     }).collect(Collectors.toMap(data -> (StatusEffect) data[0], data -> (Integer) data[1]));
 
     private final Map<Item, List<Pair<Enchantment, Integer>>> classEnchantments = Stream.of(
-            new AbstractMap.SimpleEntry<>(Items.CROSSBOW, Arrays.asList(
-                    new Pair<>(Enchantments.MULTISHOT, 4),
-                    new Pair<>(Enchantments.PIERCING, 1),
-                    new Pair<>(Enchantments.QUICK_CHARGE, 3)
-            ))
+            new AbstractMap.SimpleEntry<>(Items.NETHERITE_AXE, Collections.singletonList(
+                    new Pair<>(Enchantments.FIRE_ASPECT, 2)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.DIAMOND_AXE, Collections.singletonList(
+                    new Pair<>(Enchantments.FIRE_ASPECT, 2)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.IRON_AXE, Collections.singletonList(
+                    new Pair<>(Enchantments.FIRE_ASPECT, 2)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.GOLDEN_AXE, Collections.singletonList(
+                    new Pair<>(Enchantments.FIRE_ASPECT, 2)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.STONE_AXE, Collections.singletonList(
+                    new Pair<>(Enchantments.FIRE_ASPECT, 2)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.WOODEN_AXE, Collections.singletonList(
+                    new Pair<>(Enchantments.FIRE_ASPECT, 2)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.NETHERITE_PICKAXE, Collections.singletonList(
+                    new Pair<>(Enchantments.EFFICIENCY, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.DIAMOND_PICKAXE, Collections.singletonList(
+                    new Pair<>(Enchantments.EFFICIENCY, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.IRON_PICKAXE, Collections.singletonList(
+                    new Pair<>(Enchantments.EFFICIENCY, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.GOLDEN_PICKAXE, Collections.singletonList(
+                    new Pair<>(Enchantments.EFFICIENCY, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.STONE_PICKAXE, Collections.singletonList(
+                    new Pair<>(Enchantments.EFFICIENCY, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.WOODEN_PICKAXE, Collections.singletonList(
+                    new Pair<>(Enchantments.EFFICIENCY, 5)
+            )),
+            new AbstractMap.SimpleEntry<>(Items.FLINT_AND_STEEL, new ArrayList<Pair<Enchantment, Integer>>())
+            // See to make infinity working on crossbow
+            // Inventory auto smelt
     ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
     public FireDwarfStatusEffect() {
