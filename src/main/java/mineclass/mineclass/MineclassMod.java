@@ -7,6 +7,7 @@ import mineclass.mineclass.status.*;
 import mineclass.mineclass.utils.AppliedStatus;
 import mineclass.mineclass.utils.ClassStatusEffectInstance;
 import mineclass.mineclass.utils.Player;
+import mineclass.mineclass.utils.SmeltingEngine;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.item.ItemStack;
@@ -46,6 +47,11 @@ public class MineclassMod implements ModInitializer {
             if (player.hasStatusEffect(FIRE_DWARF)) {
                 if (FIRE_DWARF.getForbiddenItems().contains(itemStack.getItem())) {
                     return ActionResult.FAIL;
+                }
+                if (player.hasStatusEffect(FIRE_DWARF)) {
+                    if (SmeltingEngine.isSmeltable(itemStack)) {
+                        pickupEntity.setStack(SmeltingEngine.smelt(itemStack));
+                    }
                 }
             }
             if (player.hasStatusEffect(NAGA)) {
