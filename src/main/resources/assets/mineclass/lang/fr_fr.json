@@ -1,5 +1,7 @@
 {
   "effect.mineclass.dwarf": "Nain",
   "effect.mineclass.elf": "Elfe",
+  "effect.mineclass.firedwarf": "Nain de feu",
+  "effect.mineclass.naga": "Naga",
   "command.mineclass.call_class_without_args": "Vous devez appeler la commande class avec un des argument suivant : dwarf, elf, firedwarf, naga."
 }
